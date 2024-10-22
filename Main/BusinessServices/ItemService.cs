@@ -2,7 +2,7 @@
 
 namespace Main.BusinessServices
 {
-    public interface IItemService
+    public interface IItemService : IBaseBusinessService
     {
         public string GetOne();
     }

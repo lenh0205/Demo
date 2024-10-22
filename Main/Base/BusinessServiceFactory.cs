@@ -38,7 +38,7 @@ namespace Main.Base
 
             foreach (var constructor in constructors)
             {
-                // check constructor with 1 parameter with "IServiceProvider" type
+                // check constructor has 1 parameter with "IServiceProvider" type
                 var parameters = constructor.GetParameters();
                 if (parameters.Length != 1) continue;
                 var param = parameters[0];
