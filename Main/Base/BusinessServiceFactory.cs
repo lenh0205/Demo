@@ -4,7 +4,7 @@ namespace Main.Base
 {
     public interface IBusinessServicesFactory
     {
-        public ItemService Item { get; }
+        public IItemService Item { get; }
     }
 
     public class BusinessServicesFactory : IBusinessServicesFactory
@@ -18,8 +18,7 @@ namespace Main.Base
         }
 
         // Configure business services:
-        public ItemService Item => GetBusinessService<ItemService>();
-
+        public IItemService Item => GetBusinessService<ItemService>();
 
 
         private T GetBusinessService<T>() where T : class

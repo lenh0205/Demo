@@ -2,7 +2,12 @@
 
 namespace Main.BusinessServices
 {
-    public class ItemService : BaseBusinessService
+    public interface IItemService
+    {
+        public string GetOne();
+    }
+
+    public class ItemService : BaseBusinessService, IItemService
     {
         public ItemService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
