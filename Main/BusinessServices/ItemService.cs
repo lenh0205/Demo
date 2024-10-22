@@ -15,7 +15,8 @@ namespace Main.BusinessServices
 
         public string GetOne()
         {
-            return "hello";
+            var result = _unitOfWork.Item.TestItemRepository();
+            return result;
         }
     }
 

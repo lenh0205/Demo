@@ -8,7 +8,8 @@ namespace Main.Base
     public interface IUnitOfWork : IDisposable
     {
         // config repository
-        public ItemRepository Item { get; }
+        public IItemRepository Item { get; }
+
 
         // for IDisposable implementation
         public Task CommitAsync();
@@ -28,7 +29,7 @@ namespace Main.Base
         }
 
         // config repository
-        public ItemRepository Item => new(_dbContext);
+        public IItemRepository Item => new ItemRepository(_dbContext);
 
 
         // for IDisposable implementation

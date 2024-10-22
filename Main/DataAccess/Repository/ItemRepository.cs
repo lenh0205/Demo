@@ -5,14 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Main.DataAccess.Repository
 {
-    public interface IItemRepository<TEntity, TContext> : IBaseRepository<TEntity, TContext> 
-        where TEntity : class
-        where TContext : DbContext
+    public interface IItemRepository : IBaseRepository<Item, ApplicationDbContext> 
     {
         public string TestItemRepository();
     }
 
-    public class ItemRepository : BaseRepository<Item, ApplicationDbContext>, IItemRepository<Item, ApplicationDbContext>
+    public class ItemRepository : BaseRepository<Item, ApplicationDbContext>, IItemRepository
     {
         public ItemRepository(ApplicationDbContext dbContext) : base(dbContext) 
         { 
