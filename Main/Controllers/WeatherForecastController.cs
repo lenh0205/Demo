@@ -1,24 +1,20 @@
-using Main.Services;
+using Main.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Main.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController : ApplicationBaseController
     {
         private static readonly string[] Summaries = new[]
         {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
 
-        private readonly ILogger<WeatherForecastController> _logger;
-        private readonly IBusinessServicesFactory<Item> _businessServices;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IBusinessServicesFactory<Item> businessServices)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IBusinessServicesFactory businessServices) 
+            : base(logger, businessServices)
         {
-            _logger = logger;
-            _businessServices = businessServices;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
@@ -36,7 +32,7 @@ namespace Main.Controllers
         [HttpGet]
         public IActionResult GetItem()
         {
-            var result = _businessServices.GetBusinessService().;
+            var result = _businessServices.Item.GetOne();
             return Ok(result);
         }
     }
