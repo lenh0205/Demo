@@ -1,19 +1,20 @@
-using Main.Base;
+using Main.Application.Base;
+using Main.Application.DendencyInjection;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Main.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class WeatherForecastController : ApplicationBaseController
+    public class WeatherForecastController : ApplicationBaseController<WeatherForecastController>
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IBusinessServicesFactory businessServices) 
-            : base(logger, businessServices)
+        public WeatherForecastController(IControllerDependencies<WeatherForecastController> dependencies) 
+            : base(dependencies)
         {
         }
 
@@ -32,7 +33,7 @@ namespace Main.Controllers
         [HttpGet]
         public IActionResult GetItem()
         {
-            var result = _businessServices.Item.GetOne();
+            var result = _businessHandlers.Item.GetOne();
             return Ok(result);
         }
     }

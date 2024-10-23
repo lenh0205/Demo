@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Main.Base
+namespace Main.Application.Base
 {
-    public interface IBaseRepository<TEntity, TContext> 
-        where TEntity : class 
+    public interface IBaseRepository<TEntity, TContext>
+        where TEntity : class
         where TContext : DbContext
     {
         public List<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null!,

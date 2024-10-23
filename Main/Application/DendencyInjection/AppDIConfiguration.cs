@@ -1,8 +1,8 @@
-﻿using Main.Base;
+﻿using Main.Application.Factory;
 using Main.DataAccess.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main.Configuration
+namespace Main.Application.DendencyInjection
 {
     public static class AppDIConfiguration
     {
@@ -22,8 +22,10 @@ namespace Main.Configuration
 
         public static IServiceCollection AddCustomDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IBusinessServicesFactory, BusinessServicesFactory>();
+            services.AddScoped<IBusinessHandlersFactory, BusinessHandlersFactory>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient(typeof(IControllerDependencies<>), typeof(ControllerDependencies<>));
+            services.AddTransient<IBusinessHandlerDependencies, BusinessHandlerDependencies>();
 
             return services;
         }

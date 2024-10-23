@@ -1,24 +1,25 @@
-﻿using Main.BusinessServices;
+﻿using Main.Application.DendencyInjection;
+using Main.BusinessHandler;
 
-namespace Main.Base
+namespace Main.Application.Factory
 {
-    public interface IBusinessServicesFactory
+    public interface IBusinessHandlersFactory
     {
-        public IItemService Item { get; }
+        public IItemBusinessHandler Item { get; }
     }
 
-    public class BusinessServicesFactory : IBusinessServicesFactory
+    public class BusinessHandlersFactory : IBusinessHandlersFactory
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly Dictionary<Type, object> _cacheServiceInstances = new Dictionary<Type, object>();
+        private readonly IBusinessHandlerDependencies _serviceProvider;
+        private readonly Dictionary<Type, object> _cacheServiceInstances = new();
 
-        public BusinessServicesFactory(IServiceProvider serviceProvider)
+        public BusinessHandlersFactory(IBusinessHandlerDependencies serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
         // Configure business services:
-        public IItemService Item => GetBusinessService<ItemService>();
+        public IItemBusinessHandler Item => GetBusinessService<ItemBusinessHandler>();
 
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace Main.Base
                 var parameters = constructor.GetParameters();
                 if (parameters.Length != 1) continue;
                 var param = parameters[0];
-                if (param.ParameterType != typeof(IServiceProvider)) continue;
+                if (param.ParameterType != typeof(IBusinessHandlerDependencies)) continue;
 
                 var arguments = new object[1] { _serviceProvider };
                 return (T)constructor.Invoke(arguments);

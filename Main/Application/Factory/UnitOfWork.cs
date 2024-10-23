@@ -3,7 +3,7 @@ using Main.DataAccess.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Main.Base
+namespace Main.Application.Factory
 {
     public interface IUnitOfWork : IDisposable
     {
@@ -66,7 +66,7 @@ namespace Main.Base
         private bool disposed = false;
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
@@ -74,7 +74,7 @@ namespace Main.Base
                     _transaction?.Dispose();
                 }
             }
-            this.disposed = true;
+            disposed = true;
         }
 
         public void Dispose()
