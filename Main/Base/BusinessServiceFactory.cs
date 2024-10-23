@@ -21,6 +21,11 @@ namespace Main.Base
         public IItemService Item => GetBusinessService<ItemService>();
 
 
+        /// <summary>
+        /// Manage lifetime's instance of properties
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         private T GetBusinessService<T>() where T : class
         {
             var type = typeof(T);
@@ -30,7 +35,6 @@ namespace Main.Base
             _cacheServiceInstances[type] = newInstance;
             return newInstance;
         }
-
         private T CreateInstance<T>() where T : class
         {
             var type = typeof(T);

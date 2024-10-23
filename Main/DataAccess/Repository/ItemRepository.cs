@@ -1,7 +1,6 @@
 ﻿using Main.Base;
 using Main.DataAccess.AppDbContext;
 using Main.DataAccess.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Main.DataAccess.Repository
 {

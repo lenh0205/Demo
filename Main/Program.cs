@@ -1,21 +1,10 @@
-using Main.Base;
-using Main.DataAccess.AppDbContext;
-using Microsoft.EntityFrameworkCore;
+using Main.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-builder.Services.AddScoped<IBusinessServicesFactory, BusinessServicesFactory>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddInfrastructureDependencies(builder.Configuration);
+builder.Services.AddCustomDependencies(builder.Configuration);
 
 var app = builder.Build();
 

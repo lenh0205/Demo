@@ -33,7 +33,7 @@ namespace Main.Base
         public void Update(TEntity entityToUpdate);
     }
 
-    public class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity, TContext>
+    public abstract class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity, TContext>
     where TEntity : class
     where TContext : DbContext
     {
