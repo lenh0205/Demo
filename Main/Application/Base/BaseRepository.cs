@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Main.DataAccess.AppDbContext;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace Main.Application.Base
 {
     public interface IBaseRepository<TEntity, TContext>
         where TEntity : class
-        where TContext : DbContext
+        where TContext : IDbContext
     {
         public List<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null!,
            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null!,
@@ -35,7 +36,7 @@ namespace Main.Application.Base
 
     public abstract class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity, TContext>
     where TEntity : class
-    where TContext : DbContext
+    where TContext : IDbContext
     {
         protected readonly TContext _context;
         protected readonly DbSet<TEntity> _dbSet;

@@ -21,11 +21,11 @@ namespace Main.Application.Factory
 
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly IApplicationDbContext _dbContext;
         private IDbContextTransaction? _transaction;
         private readonly Dictionary<Type, object> _cacheRepositoryInstances = new Dictionary<Type, object>();
 
-        public UnitOfWork(ApplicationDbContext dbContext)
+        public UnitOfWork(IApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }

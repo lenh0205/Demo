@@ -4,14 +4,14 @@ using Main.DataAccess.Entities;
 
 namespace Main.DataAccess.Repository
 {
-    public interface IItemRepository : IBaseRepository<Item, ApplicationDbContext> 
+    public interface IItemRepository : IBaseRepository<Item, IApplicationDbContext> 
     {
         public string TestItemRepository();
     }
 
-    public class ItemRepository : BaseRepository<Item, ApplicationDbContext>, IItemRepository
+    public class ItemRepository : BaseRepository<Item, IApplicationDbContext>, IItemRepository
     {
-        public ItemRepository(ApplicationDbContext dbContext) : base(dbContext) 
+        public ItemRepository(IApplicationDbContext dbContext) : base(dbContext) 
         { 
         }
         public string TestItemRepository()
