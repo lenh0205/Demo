@@ -1,4 +1,4 @@
-﻿namespace Main.DataAccess.Entities
+﻿namespace Main.Infrastructure.Entities
 {
     public class Item
     {

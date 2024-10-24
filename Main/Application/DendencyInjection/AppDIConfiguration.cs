@@ -1,5 +1,5 @@
 ﻿using Main.Application.Factory;
-using Main.DataAccess.AppDbContext;
+using Main.Infrastructure.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace Main.Application.DendencyInjection

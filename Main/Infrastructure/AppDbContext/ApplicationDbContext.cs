@@ -1,9 +1,9 @@
-﻿using Main.DataAccess.Entities;
+﻿using Main.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Main.DataAccess.AppDbContext
+namespace Main.Infrastructure.AppDbContext
 {
     public interface IDbContext
     {
@@ -16,7 +16,7 @@ namespace Main.DataAccess.AppDbContext
         public DbSet<Item>? Item { get; set; }
 
         public int SaveChanges();
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         public DatabaseFacade Database { get; }
         public void Dispose();
     }

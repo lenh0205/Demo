@@ -1,4 +1,4 @@
-﻿using Main.DataAccess.AppDbContext;
+﻿using Main.Infrastructure.AppDbContext;
 
 namespace Main.Application.DendencyInjection
 {

@@ -1,5 +1,5 @@
-﻿using Main.DataAccess.AppDbContext;
-using Main.DataAccess.Repository;
+﻿using Main.Infrastructure.AppDbContext;
+using Main.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
