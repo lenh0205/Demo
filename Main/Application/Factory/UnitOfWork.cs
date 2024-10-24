@@ -1,11 +1,12 @@
-﻿using Main.Infrastructure.AppDbContext;
+﻿using Main.Application.DendencyInjection;
+using Main.Infrastructure.AppDbContext;
 using Main.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Main.Application.Factory
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable, IBaseFactoryImplementation
     {
         // config repository
         public IItemRepository Item { get; }
@@ -19,50 +20,24 @@ namespace Main.Application.Factory
         public void BeginTransaction<TContext>() where TContext : DbContext;
     }
 
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : BaseFactoryImplementation<IRepositoryDependencies>, IUnitOfWork
     {
-        private readonly IApplicationDbContext _dbContext;
+        private readonly IApplicationDbContext _applicationDbcontext;
         private IDbContextTransaction? _transaction;
-        private readonly Dictionary<Type, object> _cacheRepositoryInstances = new Dictionary<Type, object>();
 
-        public UnitOfWork(IApplicationDbContext dbContext)
+        public UnitOfWork(IRepositoryDependencies repositoryDependencies) : base(repositoryDependencies)
         {
-            _dbContext = dbContext;
+            _applicationDbcontext = repositoryDependencies.ApplicationDbContext;
         }
 
-        // config repository
-        public IItemRepository Item => GetRepository<ItemRepository>();
+        #region ----------> Config Repository
+        public IItemRepository Item => GetInstance<ItemRepository>();
+
+        #endregion
 
 
-        private T GetRepository<T>() where T : class
-        {
-            var type = typeof(T);
-            if (_cacheRepositoryInstances.TryGetValue(type, out var service)) return (T)service;
+        #region ----------> UnitOfWork Processing
 
-            var newInstance = CreateInstance<T>();
-            _cacheRepositoryInstances[type] = newInstance;
-            return newInstance;
-        }
-        private T CreateInstance<T>() where T : class
-        {
-            var type = typeof(T);
-            var constructors = type.GetConstructors();
-
-            foreach (var constructor in constructors)
-            {
-                // check constructor has 1 parameter with "IServiceProvider" type
-                var parameters = constructor.GetParameters();
-                if (parameters.Length != 1) continue;
-                var param = parameters[0];
-                if (param.ParameterType != typeof(DbContext)) continue;
-
-                var arguments = new object[1] { _dbContext };
-                return (T)constructor.Invoke(arguments);
-            }
-            throw new InvalidOperationException($"Unable to create an instance of {type}. No suitable constructor found.");
-        }
-
-        // for IDisposable implementation
         private bool disposed = false;
         protected virtual void Dispose(bool disposing)
         {
@@ -70,7 +45,7 @@ namespace Main.Application.Factory
             {
                 if (disposing)
                 {
-                    _dbContext.Dispose();
+                    _applicationDbcontext.Dispose();
                     _transaction?.Dispose();
                 }
             }
@@ -84,18 +59,20 @@ namespace Main.Application.Factory
         }
         public void Commit()
         {
-            _dbContext.SaveChanges();
+            _applicationDbcontext.SaveChanges();
         }
         public async Task CommitAsync()
         {
-            await _dbContext.SaveChangesAsync();
+            await _applicationDbcontext.SaveChangesAsync();
         }
         public void BeginTransaction<TContext>() where TContext : DbContext
         {
             if (typeof(TContext) == typeof(ApplicationDbContext))
-                _transaction = _dbContext.Database.BeginTransaction();
+                _transaction = _applicationDbcontext.Database.BeginTransaction();
         }
         public void CommitTransaction<TContext>() where TContext : DbContext => _transaction?.Commit();
         public void RollbackTransaction<TContext>() where TContext : DbContext => _transaction?.Rollback();
+
+        #endregion
     }
 }

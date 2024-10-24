@@ -20,9 +20,4 @@ namespace Main.BusinessHandler
             return result;
         }
     }
-
-    public class Item
-    {
-        public int Id { get; set; }
-    }
 }

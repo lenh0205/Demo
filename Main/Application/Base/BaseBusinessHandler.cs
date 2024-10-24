@@ -12,9 +12,9 @@ namespace Main.Application.Base
     {
         protected readonly IUnitOfWork _unitOfWork;
 
-        protected BaseBusinessHandler(IBusinessHandlerDependencies serviceProvider)
+        protected BaseBusinessHandler(IBusinessHandlerDependencies businessHandlerDependencies)
         {
-            _unitOfWork = serviceProvider.UnitOfWork;
+            _unitOfWork = businessHandlerDependencies.UnitOfWork;
         }
 
         public string TestBaseBusinessHandler()
