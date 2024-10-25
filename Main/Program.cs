@@ -1,9 +1,9 @@
 using Main.Application.DendencyInjection;
-using Main.MongoDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddApplicationDependencies();
 builder.Services.AddInfrastructureDependencies(builder.Configuration);
 builder.Services.AddCustomDependencies();
 

@@ -6,6 +6,8 @@ namespace Main.Application.Factory
     public interface IBusinessHandlersFactory : IBaseFactoryImplementation
     {
         public IItemBusinessHandler Item { get; }
+        public IProductBusinessHandler Product { get; }
+
     }
 
     public class BusinessHandlersFactory : BaseFactoryImplementation<IBusinessHandlerDependencies>, IBusinessHandlersFactory
@@ -16,6 +18,7 @@ namespace Main.Application.Factory
 
         #region ----------> Configure business services:
         public IItemBusinessHandler Item => GetInstance<ItemBusinessHandler>();
+        public IProductBusinessHandler Product => GetInstance<ProductBusinessHandler>();
 
         #endregion
     }

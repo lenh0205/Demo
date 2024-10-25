@@ -1,24 +1,21 @@
 ﻿using Main.Application.Factory;
 using Main.Infrastructure.AppDbContext;
-using Main.MongoDB;
 using Microsoft.EntityFrameworkCore;
 
 namespace Main.Application.DendencyInjection
 {
-    public static class AppDIConfiguration
+    public static class ServicesConfiguration
     {
-        public static void AddApplicationDependencies(this IServiceCollection services, IConfiguration configuration)
+        public static void AddApplicationDependencies(this IServiceCollection services)
         {
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-
-            
         }
 
         public static void AddInfrastructureDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            // Sql Server
+            // SqlServer
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
@@ -26,11 +23,11 @@ namespace Main.Application.DendencyInjection
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
             // MongoDB
-            services.Configure<MongoDBSettings>(configuration.GetSection("MongoDB"));
-            services.AddSingleton<MongoDBService>();
+            services.AddScoped<IMongoDbContext, MongoDbContext>();
+            services.AddScoped<IMongoUnitOfWork, MongoUnitOfWork>();
         }
 
-            public static void AddCustomDependencies(this IServiceCollection services)
+        public static void AddCustomDependencies(this IServiceCollection services)
         {
             services.AddScoped<IBusinessHandlersFactory, BusinessHandlersFactory>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

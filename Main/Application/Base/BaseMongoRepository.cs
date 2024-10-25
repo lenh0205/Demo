@@ -1,40 +1,38 @@
-﻿using Main.MongoDB;
+﻿using Main.Infrastructure.AppDbContext;
 using MongoDB.Driver;
+using ServiceStack;
 
 namespace Main.Application.Base
 {
-    public abstract class MongoContext
+    public interface IMongoRepository<TEntity> : IDisposable where TEntity : class
     {
-        protected MongoContext(IMongoDbSettings connectionSetting)
-        {
-            var client = new MongoClient(connectionSetting.ConnectionString);
-            Database = client.GetDatabase(connectionSetting.DatabaseName);
-        }
-
-        public IMongoDatabase Database { get; }
+        void Add(TEntity obj);
+        Task<TEntity> GetById(Guid id);
+        Task<IEnumerable<TEntity>> GetAll();
+        void Update(TEntity obj);
+        void Remove(Guid id);
     }
 
-    public class BaseMongoRepository<TEntity>
+    public abstract class BaseMongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity : class
     {
-        protected readonly IMongoDatabase Database;
-        protected readonly IMongoCollection<TEntity> DbSet;
+        protected readonly IMongoDbContext Context;
+        protected IMongoCollection<TEntity> DbSet;
 
-        protected BaseMongoRepository(MongoContext context)
+        protected BaseMongoRepository(IMongoDbContext context)
         {
-            Database = context.Database;
-            DbSet = Database.GetCollection<TEntity>(typeof(TEntity).Name);
+            Context = context;
+            DbSet = Context.GetCollection<TEntity>(typeof(TEntity).Name);
         }
 
-        public virtual async Task<TEntity> Add(TEntity obj)
+        public virtual void Add(TEntity obj)
         {
-            await DbSet.InsertOneAsync(obj);
-            return obj;
+            Context.AddCommand(() => DbSet.InsertOneAsync(obj));
         }
 
-        public virtual async Task<TEntity> GetById(string id)
+        public virtual async Task<TEntity> GetById(Guid id)
         {
-            var data = await DbSet.Find(FilterId(id)).SingleOrDefaultAsync();
-            return data;
+            var data = await DbSet.FindAsync(Builders<TEntity>.Filter.Eq("_id", id));
+            return data.SingleOrDefault();
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAll()
@@ -43,25 +41,19 @@ namespace Main.Application.Base
             return all.ToList();
         }
 
-        public async virtual Task<TEntity> Update(string id, TEntity obj)
+        public virtual void Update(TEntity obj)
         {
-            await DbSet.ReplaceOneAsync(FilterId(id), obj);
-            return obj;
+            Context.AddCommand(() => DbSet.ReplaceOneAsync(Builders<TEntity>.Filter.Eq("_id", obj.GetId()), obj));
         }
 
-        public async virtual Task<bool> Remove(string id)
+        public virtual void Remove(Guid id)
         {
-            var result = await DbSet.DeleteOneAsync(FilterId(id));
-            return result.IsAcknowledged;
+            Context.AddCommand(() => DbSet.DeleteOneAsync(Builders<TEntity>.Filter.Eq("_id", id)));
         }
 
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
-        }
-        private static FilterDefinition<TEntity> FilterId(string key)
-        {
-            return Builders<TEntity>.Filter.Eq("Id", key);
+            Context?.Dispose();
         }
     }
 }
