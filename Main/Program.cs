@@ -7,9 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureDependencies(builder.Configuration);
 builder.Services.AddCustomDependencies();
 
-builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
-builder.Services.AddSingleton<MongoDBService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
